@@ -58,6 +58,7 @@ mxBasePath = 'assets/mxgraph/';
     <script src="app/services/regex_service.js"> </script>
     <script src="app/services/walker_service.js"> </script>
     <script src="app/services/current_lab.js"> </script>
+    <script src="app/services/dockerfile_tpl.js"> </script>
     <script src="app/services/images_service.js"> </script>
     <script src="app/services/socket_service.js"> </script>
     <script src="app/services/safe_apply_service.js"> </script>
@@ -181,6 +182,7 @@ return _factory;
   .service('dockerImagesService', dsp_imagesService) 
   .service('containerManager',dsp_ContainerManagerService) 
   .service('safeApplyService', SafeApply) 
+  .service('DockerFilesService', DockerFilesService)
   .controller("MainCtrl", dsp_MainCtrl)
   .controller("labelsCtrl", dsp_LabelsCtrl) 
   .controller("labsCtrl",  dsp_LabsCtrl) 

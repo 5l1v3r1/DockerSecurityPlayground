@@ -10,7 +10,7 @@ var dsp_dockerfileComponent  =
     //   dismiss: '&',
     //   dockerfile: '='
     // },
-    controller: function ($http, $scope, $location, Notification, Upload, $timeout, safeApplyService, SocketService, dockerAPIService) {
+    controller: function ($http, $scope, $location, Notification, Upload, $timeout, safeApplyService, SocketService, dockerAPIService, DockerFilesService) {
 /*
  * n
  *
@@ -24,7 +24,6 @@ var dsp_dockerfileComponent  =
         }*/
 function _addDir(f) {
 }
-
       function _getFileContent(f, cb) {
         var reader = new FileReader();
         reader.readAsText(f, "UTF-8");
@@ -74,15 +73,13 @@ function _addDir(f) {
         });
       }
       function _editElement(treeModel, id, content, isExecutable) {
-        console.log("EDIT");
         treeModel.forEach(function (m) {
           if (m.id === id) {
-            console.log("EDIT CONTeNT");
             m.content = content;
             m.isExecutable = isExecutable;
           }
         });
-        console.log(treeModel);
+        // console.log(treeModel);
         return treeModel;
       }
 
@@ -194,6 +191,10 @@ function _addCopyOptionToDockerfile(filename, treeModel) {
       $scope.newFile = "";
       $scope.log = '';
       $scope.treeModel = [];
+      $scope.argumentsNewAction = [];
+      $scope.newAction = "";
+      $scope.newActionDescr = "";
+      $scope.newArg = "";
 
       var rootElement = _getRoot($scope.treeModel);
       $scope.$watch('files', function () {
@@ -294,6 +295,33 @@ $scope.addNewFile = function() {
     _newNode($scope.treeModel, $scope.selectedElement.id, $scope.selectedElement+ "/" + $scope.newFile, $scope.newFile, "", "textfile");
   }
   $scope.newFile = "";
+}
+$scope.addNewAction = function() {
+  var newActionContent = DockerFilesService.getActionTemplate($scope.newAction, $scope.newActionDescr, $scope.argumentsNewAction);
+  if ($scope.selectedElement.id == "." || $scope.selectedElement.type !== "dir") {
+    _newNode($scope.treeModel, ".", "./"+$scope.newAction, $scope.newAction,  newActionContent, "textfile");
+  } else {
+    _newNode($scope.treeModel, $scope.selectedElement.id, $scope.selectedElement+ "/" + $scope.newAction, $scope.newAction, newActionContent, "textfile");
+  }
+  var imageTemplate = DockerFilesService.getLabelTemplate($scope.newAction, $scope.newActionDescr, $scope.argumentsNewAction);
+  DockerFilesService.appendToDockerfile(_getDockerfile($scope.treeModel), imageTemplate);
+
+  $scope.newAction = "";
+  $scope.newActionDescr = "";
+  $scope.argumentsNewAction = [];
+}
+
+$scope.addNewArg = function() {
+  var e = "" + $scope.newArg;
+  if (_.contains($scope.argumentsNewAction, e)) {
+    Notification({message: "Argument already set"}, 'error');
+  } else {
+  $scope.argumentsNewAction.push(e);
+  $scope.newArg = "";
+ }
+}
+$scope.deleteArg = function(a) {
+  $scope.argumentsNewAction = _.without($scope.argumentsNewAction, a);
 }
 
 $scope.saveExecutable = function() {
