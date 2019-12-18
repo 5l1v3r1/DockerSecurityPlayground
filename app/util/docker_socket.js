@@ -1,5 +1,5 @@
 const server = require('socket.io');
-const pty = require('node-pty');
+const pty = require('node-pty-prebuilt');
 const path = require('path');
 const AppUtils = require('../util/AppUtils');
 const log = AppUtils.getLogger();

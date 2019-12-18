@@ -189,6 +189,7 @@ DSP_GraphEditorController : function DSP_GraphEditorController($scope,  $routePa
     $scope.n.name = networkName
     //Update informations network of containers
     containerManager.newNetworkOccurred(network)
+    return {name:networkName, subnet:$scope.n.subnet};
   };
 
   $scope.goBack = function() {
@@ -196,6 +197,10 @@ DSP_GraphEditorController : function DSP_GraphEditorController($scope,  $routePa
 window.location.href = urlToGo;
     // $location.url(urlToGo);
   }
+  $scope.getNetwork = function(networkName) {
+       return NetworkManagerService.getNetwork(networkName);
+ }
+
 
   // Variable that contains old name of network is sent to networkElementCallback when the editNetwork is done
   var networkInEditing = null;
@@ -204,6 +209,7 @@ window.location.href = urlToGo;
     var s = $scope.subnet.first+"."+$scope.subnet.two+"."+$scope.subnet.three+"."+$scope.subnet.four
 
     // Update network in network list
+
     var networkToEdit = NetworkManagerService.getNetwork(networkInEditing.name);
     networkToEdit.name = $scope.n.name;
     networkToEdit.subnet = s;
@@ -439,6 +445,7 @@ window.location.href = urlToGo;
 
       ////Add to not drawed new container
       containerManager.addToDraw(c)
+      return c;
       Notification({message: c.name+ " created!"}, 'success');
     }
   }
@@ -878,6 +885,8 @@ window.location.href = urlToGo;
   }
 
   $scope.onClickEditNetwork = function(networkName) {
+    console.log("[+] On click network graph_editor_cotroller 884");
+    console.log(networkName);
     safeApplyService.exec($scope, function() {
       $scope.showEditNetwork = true;
       if (NetworkManagerService.hasNetwork(networkName)) {

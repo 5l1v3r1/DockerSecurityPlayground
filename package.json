@@ -54,7 +54,7 @@
     "mydockerjs": "^2.10.0",
     "ncp": "^2.0.0",
     "node-cmd": "^3.0.0",
-    "node-pty": "^0.7.8",
+    "node-pty-prebuilt": "^0.7.6",
     "path-exists": "^3.0.0",
     "q": "^1.5.0",
     "randomstring": "^1.1.5",
